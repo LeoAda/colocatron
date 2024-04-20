@@ -1,0 +1,3 @@
+/backend/.venv
+/backend/db.json
+/backend/__pycache__/
