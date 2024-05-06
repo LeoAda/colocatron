@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<head>
+  <title>{% block title %}{% endblock %} - Colocatron</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {#
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css" /> #}
+</head>
+
+<body>
+  <header>
+    <h1 class="title">Colocatron</h1>
+    {% block header %}{% endblock %}
+    {% if current_user.is_authenticated %}
+    <h3>{{ current_user.name }}</h3>
+    {% endif %}
+  </header>
+  <nav>
+    <ul>
+      {% if current_user.is_authenticated %}
+      <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+      {% else %}
+      <li><a href="{{ url_for('register') }}">Register</a></li>
+      <li><a href="{{ url_for('login') }}">Log In</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  <main>
+    <section class="section">
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+      <p class="{{ category }}">{{ message }}</p>
+      {% endfor %}
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+</body>

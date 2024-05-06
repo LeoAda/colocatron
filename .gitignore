@@ -1,4 +1,5 @@
-/backend/.venv
-/backend/db.json
-/backend/__pycache__/
+/src/.venv
+/src/db.json
+/src/__pycache__/
 db.sqlite
+.env
