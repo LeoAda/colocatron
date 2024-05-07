@@ -2,6 +2,7 @@ from typing import Union
 from sqlalchemy.orm import Session
 from db import User, Item, Task, Transaction, get_engine
 from hashlib import sha256
+import emoji
 
 
 def add_user(session: Session, name: str, username: str, password: str) -> User:
@@ -30,8 +31,11 @@ def remove_user(session: Session, user_id: int) -> None:
     session.commit()
 
 
-def add_item(session: Session, name: str, current_user: User) -> Item:
-    new_item = Item(name=name, current_user=current_user)
+def add_item(
+    session: Session, name: str, current_user: User, emojized_emoji: str = "🛍"
+) -> Item:
+    emoji_code = emoji.demojize(emojized_emoji, language="alias")
+    new_item = Item(name=name, current_user=current_user, emoji=emoji_code)
     session.add(new_item)
     session.commit()
     return new_item
@@ -51,8 +55,11 @@ def remove_item(session: Session, item_id: int) -> None:
     session.commit()
 
 
-def add_task(session: Session, name: str, current_user: User) -> Task:
-    new_task = Task(name=name, current_user=current_user)
+def add_task(
+    session: Session, name: str, current_user: User, emojized_emoji: str = "🧹"
+) -> Task:
+    emoji_code = emoji.demojize(emojized_emoji, language="alias")
+    new_task = Task(name=name, current_user=current_user, emoji=emoji_code)
     session.add(new_task)
     session.commit()
     return new_task
@@ -77,7 +84,6 @@ def add_transaction(
     sender: User,
     receiver: User,
     reason: str,
-    due_date: str,
     amount: float,
     sender_approved: bool = False,
     receiver_approved: bool = False,
@@ -86,7 +92,6 @@ def add_transaction(
         sender=sender,
         receiver=receiver,
         reason=reason,
-        due_date=due_date,
         amount=amount,
         sender_approved=sender_approved,
         receiver_approved=receiver_approved,

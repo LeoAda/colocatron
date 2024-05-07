@@ -1,57 +1,92 @@
-{% extends 'layout.html' %}
-{% block title %}Admin{% endblock%}
-{% block header%}<h2 class="subtitle">Admin</h2>{% endblock %}
-
-
-{% block content %}
+{% extends 'layout.html' %} {% block title %}Admin{% endblock%} {% block
+header%}
+<h2 class="subtitle">Admin</h2>
+{% endblock %} {% block content %}
 <ul id="users">
-    Users : {% for user in users %}
-    <li>
-        {{user.username}} - {{ user.name }}
-    </li>
-    {% else %}
-    <li>No users</li>
-    {% endfor %}
+  Users : {% for user in users %}
+  <li>{{user.id}} - {{user.username}} - {{ user.name }}</li>
+  {% else %}
+  <li>No users</li>
+  {% endfor %}
 </ul>
 
 <ul id="tasks">
-    Tasks : {% for task in tasks %}
-    <li>
-        {{task.emoji|emojify}} {{ task.name }} - {{task.current_user.name}}
-    </li>
-    <form action="{{ url_for('request_delete_task') }}" method="post">
-        <input type="hidden" name="task_id" value="{{ task.id }}" />
-        <button type="submit">Delete</button>
-    </form>
-    {% else %}
-    <li>No tasks</li>
-    {% endfor %}
-    <form action="{{ url_for('request_add_task') }}" method="post">
-        <label for="task_name">Name</label>
-        <input type="task_name" name="task_name" id="task_name" required />
-        <input type="submit" value="Add" />
-    </form>
+  Tasks : {% for task in tasks %}
+  <li>{{task.id}} - {{task.emoji|emojify}}/{{task.emoji}} - {{ task.name }} - {{task.current_user.name}}</li>
+  <form action="{{ url_for('request_delete_task') }}" method="post">
+    <input type="hidden" name="task_id" value="{{ task.id }}" />
+    <button type="submit">Delete</button>
+  </form>
+  {% else %}
+  <li>No tasks</li>
+  {% endfor %}
+  <form action="{{ url_for('request_add_task') }}" method="post">
+    <label for="task_name">Name</label>
+    <input type="task_name" name="task_name" id="task_name" required />
+    <label for="emoji">Emoji(optional)</label>
+    <input type="emoji" name="emoji" id="emoji" />
+    <input type="submit" value="Add" />
+  </form>
 </ul>
 
 <ul id="items">
-    Items : {% for item in items %}
-    <li>{{item.emoji|emojify}} {{ item.name }} - {{item.current_user.name}}</li>
-    {% else %}
-    <li>No items</li>
-    {% endfor %}
+  Items : {% for item in items %}
+  <li>{{item.id}} - {{item.emoji|emojify}}/{{item.emoji}} - {{ item.name }} - {{item.current_user.name}}</li>
+  <form action="{{ url_for('request_delete_item') }}" method="post">
+    <input type="hidden" name="item_id" value="{{ item.id }}" />
+    <button type="submit">Delete</button>
+  </form>
+  {% else %}
+  <li>No items</li>
+  {% endfor %}
+  <form action="{{ url_for('request_add_item') }}" method="post">
+    <label for="item_name">Name</label>
+    <input type="item_name" name="item_name" id="item_name" required />
+    <label for="emoji">Emoji(optional)</label>
+    <input type="emoji" name="emoji" id="emoji" />
+    <label for="user_id">User</label>
+    <select name="user_id" id="user_id">
+      {% for user in users%}
+      <option value="{{ user.id }}">{{user.name}}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Add" />
+  </form>
 </ul>
 
 <ul id="transactions">
-    Transactions :
-    {% for transaction in transactions%}
-    <li>{{":check_mark_button:"|emojify if transaction.sender_approved else
-        ":cross_mark_button:"|emojify }} {{transaction.sender}} {{":right_arrow:"|emojify}}
-        {{":check_mark_button:"|emojify
-        if transaction.receiver_approved else ":cross_mark_button:"|emojify }} {{transaction.receiver}} -
-        {{transaction.amount}}{{CURRENCY}} -
-        {{transaction.reason}}</li>
-    {% else %}
-    <li>No transactions</li>
-    {% endfor %}
+  Transactions : {% for transaction in transactions%}
+  <li>
+    {{transaction.id}} - {{transaction.sender}}({{"Approved" if transaction.sender_approved else "Not approved"}})
+    → {{transaction.receiver}}({{"Approved" if transaction.receiver_approved else "Not approved"}}) -
+    {{transaction.amount}}{{CURRENCY}} -
+    {{transaction.reason}}
+  </li>
+  <form action="{{ url_for('request_delete_transaction') }}" method="post">
+    <input type="hidden" name="transaction_id" value="{{ transaction.id }}" />
+    <button type="submit">Delete</button>
+  </form>
+  {% else %}
+  <li>No transactions</li>
+  {% endfor %}
+  <form action="{{ url_for('request_add_transaction') }}" method="post">
+    <label for="sender_id">Sender</label>
+    <select name="sender_id" id="sender_id">
+      {% for user in users%}
+      <option value="{{ user.id }}">{{user.name}}</option>
+      {% endfor %}
+    </select>
+    <label for="receiver_id">receiver</label>
+    <select name="receiver_id" id="receiver_id">
+      {% for user in users%}
+      <option value="{{ user.id }}">{{user.name}}</option>
+      {% endfor %}
+    </select>
+    <label for="amount">amount</label>
+    <input type="amount" name="amount" id="amount" required />
+    <label for="reason">reason</label>
+    <input type="reason" name="reason" id="reason" required />
+    <input type="submit" value="Add" />
+  </form>
 </ul>
 {% endblock %}

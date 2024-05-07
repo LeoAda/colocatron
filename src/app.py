@@ -70,7 +70,8 @@ def register():
         password = request.form.get("password")
         user = add_user(session, name=name, username=username, password=password)
         return redirect(url_for("login"))
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
 
 
 @app.route("/", methods=["GET"])
@@ -95,8 +96,22 @@ def task():
 @login_required
 def request_add_task():
     request_task_name = request.form.get("task_name")
-    add_task(session=session, name=request_task_name, current_user=current_user)
-    return redirect(url_for("admin"))
+    request_emoji = request.form.get("emoji")
+    request_user_id = request.form.get("user_id")
+    request_user = (
+        get_user_by_id(session=session, user_id=request_user_id)
+        if request_user_id
+        else current_user
+    )
+    params = {
+        "session": session,
+        "name": request_task_name,
+        "current_user": request_user,
+    }
+    if request_emoji:
+        params["emojized_emoji"] = request_emoji
+    add_task(**params)
+    return redirect(request.referrer)
 
 
 @app.route("/task/delete", methods=["POST"])
@@ -104,7 +119,7 @@ def request_add_task():
 def request_delete_task():
     request_task_id = int(request.form.get("task_id"))
     remove_task(session=session, task_id=request_task_id)
-    return redirect(url_for("admin"))
+    return redirect(request.referrer)
 
 
 @app.route("/item", methods=["POST"])
@@ -117,6 +132,36 @@ def item():
             return redirect(url_for("home"))
     flash("Item not found")
     return redirect(url_for("home"))
+
+
+@app.route("/item/add", methods=["POST"])
+@login_required
+def request_add_item():
+    request_item_name = request.form.get("item_name")
+    request_emoji = request.form.get("emoji")
+    request_user_id = request.form.get("user_id")
+    request_user = (
+        get_user_by_id(session=session, user_id=request_user_id)
+        if request_user_id
+        else current_user
+    )
+    params = {
+        "session": session,
+        "name": request_item_name,
+        "current_user": request_user,
+    }
+    if request_emoji:
+        params["emojized_emoji"] = request_emoji
+    add_item(**params)
+    return redirect(request.referrer)
+
+
+@app.route("/item/delete", methods=["POST"])
+@login_required
+def request_delete_item():
+    request_item_id = int(request.form.get("item_id"))
+    remove_item(session=session, item_id=request_item_id)
+    return redirect(request.referrer)
 
 
 @app.route("/transaction", methods=["POST"])
@@ -133,6 +178,33 @@ def transaction():
     else:
         flash("Transaction not found")
     return redirect(url_for("home"))
+
+
+@app.route("/transaction/add", methods=["POST"])
+@login_required
+def request_add_transaction():
+    request_sender_id = request.form.get("sender_id")
+    request_receiver_id = request.form.get("receiver_id")
+    request_amount = float(request.form.get("amount"))
+    request_reason = request.form.get("reason")
+    sender = get_user_by_id(session=session, user_id=request_sender_id)
+    receiver = get_user_by_id(session=session, user_id=request_receiver_id)
+    add_transaction(
+        session=session,
+        sender=sender,
+        receiver=receiver,
+        reason=request_reason,
+        amount=request_amount,
+    )
+    return redirect(request.referrer)
+
+
+@app.route("/transaction/delete", methods=["POST"])
+@login_required
+def request_delete_transaction():
+    request_transaction_id = int(request.form.get("transaction_id"))
+    remove_transaction(session=session, transaction_id=request_transaction_id)
+    return redirect(request.referrer)
 
 
 @app.route("/history", methods=["GET"])
@@ -159,7 +231,7 @@ def admin():
 
 
 @app.template_filter("emojify")
-def emoji_filter(s):
+def emojify(s):
     return emoji.emojize(s, language="alias")
 
 

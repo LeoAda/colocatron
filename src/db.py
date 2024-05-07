@@ -42,7 +42,6 @@ class Transaction(Base):
         "User", back_populates="received_transactions", foreign_keys=[receiver_id]
     )
     reason: Mapped[str] = mapped_column()
-    due_date: Mapped[str] = mapped_column()
     amount: Mapped[float] = mapped_column()
     sender_approved: Mapped[bool] = mapped_column()
     receiver_approved: Mapped[bool] = mapped_column()
@@ -51,7 +50,7 @@ class Transaction(Base):
         return f"{self.sender!s} -> {self.receiver!s} - {self.amount} - {self.reason}"
     
     def __repr__(self) -> str:
-        return f"Transaction(id={self.id!r}, send={self.sender!s}, receiver_id={self.receiver!s}, reason={self.reason!r}, due_date={self.due_date!r}, amount={self.amount!r}, sender_approved={self.sender_approved!r}, receiver_approved={self.receiver_approved!r})"
+        return f"Transaction(id={self.id!r}, send={self.sender!s}, receiver_id={self.receiver!s}, reason={self.reason!r}, amount={self.amount!r}, sender_approved={self.sender_approved!r}, receiver_approved={self.receiver_approved!r})"
 
 
 class Item(Base):
@@ -59,7 +58,7 @@ class Item(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
-    emoji: Mapped[str] = mapped_column(default=":shopping_bags:")
+    emoji: Mapped[str] = mapped_column()
     current_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     current_user: Mapped["User"] = relationship(back_populates="items")
 
@@ -75,7 +74,7 @@ class Task(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
-    emoji: Mapped[str] = mapped_column(default=":broom:")
+    emoji: Mapped[str] = mapped_column()
     current_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     current_user: Mapped["User"] = relationship(back_populates="tasks")
 

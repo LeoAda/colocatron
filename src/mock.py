@@ -21,7 +21,6 @@ def create_mock() -> dict:
         sender=new_user1,
         receiver=new_user2,
         reason="rent",
-        due_date="2024-01-01",
         amount=100,
     )
     mock_ids = {
@@ -63,5 +62,5 @@ def read_db():
 
 
 # delete_all()
-# create_mock()
+create_mock()
 read_db()
