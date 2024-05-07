@@ -1,0 +1,2 @@
+# Generate .env
+# Setup venv

@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% block title %}History{% endblock%}
+{% block header%}<h2 class="subtitle">History</h2>{% endblock %}
+
+
+{% block content %}
+<ul id="tasks">
+    Tasks : {% for task in tasks %}
+    <li>
+        {{task.emoji|emojify}} {{ task.name }} - {{task.current_user.name}}
+    </li>
+    {% else %}
+    <li>No tasks</li>
+    {% endfor %}
+</ul>
+
+<ul id="items">
+    Items : {% for item in items %}
+    <li>{{item.emoji|emojify}} {{ item.name }} - {{item.current_user.name}}</li>
+    {% else %}
+    <li>No items</li>
+    {% endfor %}
+</ul>
+
+<ul id="current_transactions">
+    Current transactions :
+    {% for transaction in transactions if not (transaction.sender_approved and
+    transaction.receiver_approved)%}
+    <li>{{":check_mark_button:"|emojify if transaction.sender_approved else
+        ":cross_mark_button:"|emojify }} {{transaction.sender}} {{":right_arrow:"|emojify}}
+        {{":check_mark_button:"|emojify
+        if transaction.receiver_approved else ":cross_mark_button:"|emojify }} {{transaction.receiver}} -
+        {{transaction.amount}}{{CURRENCY}} -
+        {{transaction.reason}}</li>
+    {% else %}
+    <li>No transactions</li>
+    {% endfor %}
+</ul>
+<ul id="past_transactions">
+    Past transactions :
+    {% for transaction in transactions if (transaction.sender_approved and
+    transaction.receiver_approved)%}
+    <li>{{":check_mark_button:"|emojify if transaction.sender_approved else
+        ":cross_mark_button:"|emojify }} {{transaction.sender}} {{":right_arrow:"|emojify}}
+        {{":check_mark_button:"|emojify
+        if transaction.receiver_approved else ":cross_mark_button:"|emojify }} {{transaction.receiver}} -
+        {{transaction.amount}}{{CURRENCY}} -
+        {{transaction.reason}}</li>
+    {% else %}
+    <li>No transactions</li>
+    {% endfor %}
+</ul>
+{% endblock %}

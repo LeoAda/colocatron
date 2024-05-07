@@ -1,0 +1,7 @@
+python-dotenv
+sqlalchemy
+flask
+flask-login
+emoji
+gunicorn
+waitress
