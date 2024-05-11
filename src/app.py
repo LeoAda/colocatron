@@ -218,6 +218,26 @@ def history():
     )
 
 
+@app.route("/manage", methods=["GET"])
+@login_required
+def manage():
+    tasks = get_tasks(session=session)
+    items = get_items(session=session)
+    transactions = get_transactions(session=session)
+    users = get_users(session=session)
+    return render_template(
+        "manage.html", tasks=tasks, items=items, transactions=transactions, users=users
+    )
+
+
+@app.route("/user/delete", methods=["POST"])
+@login_required
+def request_delete_user():
+    request_user_id = int(request.form.get("user_id"))
+    remove_user(session=session, user_id=request_user_id)
+    return redirect(request.referrer)
+
+
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():

@@ -61,6 +61,6 @@ def read_db():
     print(tasks)
 
 
-# delete_all()
+delete_all()
 create_mock()
 read_db()

@@ -5,6 +5,10 @@ header%}
 <ul id="users">
   Users : {% for user in users %}
   <li>{{user.id}} - {{user.username}} - {{ user.name }}</li>
+  <form action="{{ url_for('request_delete_user') }}" method="post">
+    <input type="hidden" name="user_id" value="{{ user.id }}" />
+    <button type="submit">Delete</button>
+  </form>
   {% else %}
   <li>No users</li>
   {% endfor %}
@@ -22,9 +26,9 @@ header%}
   {% endfor %}
   <form action="{{ url_for('request_add_task') }}" method="post">
     <label for="task_name">Name</label>
-    <input type="task_name" name="task_name" id="task_name" required />
+    <input type="text" name="task_name" id="task_name" required />
     <label for="emoji">Emoji(optional)</label>
-    <input type="emoji" name="emoji" id="emoji" />
+    <input type="text" name="emoji" id="emoji" />
     <input type="submit" value="Add" />
   </form>
 </ul>
@@ -41,9 +45,9 @@ header%}
   {% endfor %}
   <form action="{{ url_for('request_add_item') }}" method="post">
     <label for="item_name">Name</label>
-    <input type="item_name" name="item_name" id="item_name" required />
+    <input type="text" name="item_name" id="item_name" required />
     <label for="emoji">Emoji(optional)</label>
-    <input type="emoji" name="emoji" id="emoji" />
+    <input type="text" name="emoji" id="emoji" />
     <label for="user_id">User</label>
     <select name="user_id" id="user_id">
       {% for user in users%}
@@ -83,9 +87,9 @@ header%}
       {% endfor %}
     </select>
     <label for="amount">amount</label>
-    <input type="amount" name="amount" id="amount" required />
+    <input type="text" name="amount" id="amount" required />
     <label for="reason">reason</label>
-    <input type="reason" name="reason" id="reason" required />
+    <input type="text" name="reason" id="reason" required />
     <input type="submit" value="Add" />
   </form>
 </ul>

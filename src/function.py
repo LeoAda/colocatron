@@ -27,6 +27,14 @@ def get_user_by_username(session: Session, username: str) -> User | None:
 
 def remove_user(session: Session, user_id: int) -> None:
     user = get_user_by_id(session, user_id)
+    for task in user.tasks:
+        assign_task_to_next_user(session=session, task=task)
+    for item in user.items:
+        assign_item_to_next_user(session=session, item=item)
+    for transaction in user.sended_transactions:
+        remove_transaction(session=session, transaction_id=transaction.id)
+    for transaction in user.received_transactions:
+        remove_transaction(session=session, transaction_id=transaction.id)
     session.delete(user)
     session.commit()
 

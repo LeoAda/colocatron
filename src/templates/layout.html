@@ -4,10 +4,7 @@
   <title>{% block title %}{% endblock %} - Colocatron</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   {#
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
-  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css" />
   #}
 </head>
 
@@ -23,6 +20,7 @@
       {% if current_user.is_authenticated %}
       <li><a href="{{ url_for('home') }}">Home</a></li>
       <li><a href="{{ url_for('history') }}">History</a></li>
+      <li><a href="{{ url_for('manage') }}">Manage</a></li>
       <li><a href="{{ url_for('admin') }}">Admin</a></li>
       <li><a href="{{ url_for('logout') }}">Log Out</a></li>
       {% else %}

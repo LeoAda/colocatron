@@ -29,4 +29,3 @@ https://www.digitalocean.com/community/tutorials/how-to-use-web-forms-in-a-flask
 * Config (poetry,pip,pipx,python-venv,pythonsetup)
 * Ui
 * Cron for transaction
-* Delete user (compliqué à cause de la relation avec les autres objets)
