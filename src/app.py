@@ -10,8 +10,7 @@ from flask_login import (
 from sqlalchemy.orm import sessionmaker, scoped_session
 from config import configs
 from function import *
-from hashlib import sha256
-
+from utils import string_hash
 import emoji
 
 
@@ -44,7 +43,7 @@ def login():
         password = request.form.get("password")
         user = get_user_by_username(session, username)
         if user != None:
-            if user.password == sha256(password.encode("utf-8")).hexdigest():
+            if user.password == string_hash(password):
                 login_user(user, remember=True)
                 return redirect(url_for("home"))
             else:

@@ -1,12 +1,12 @@
 from typing import Union
 from sqlalchemy.orm import Session
 from db import User, Item, Task, Transaction, get_engine
-from hashlib import sha256
+from utils import string_hash
 import emoji
 
 
 def add_user(session: Session, name: str, username: str, password: str) -> User:
-    hash_password = sha256(password.encode("utf-8")).hexdigest()
+    hash_password = string_hash(password)
     new_user = User(name=name, username=username, password=hash_password)
     session.add(new_user)
     session.commit()

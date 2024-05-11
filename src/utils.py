@@ -1,4 +1,5 @@
 import secrets
+from hashlib import sha256
 
 
 def generate_secret_key() -> str:
@@ -6,3 +7,7 @@ def generate_secret_key() -> str:
     secret = secrets.token_hex()
     print(f"Secret : {secret}")
     return secret
+
+
+def string_hash(string: str) -> str:
+    return sha256(string.encode("utf-8")).hexdigest()
