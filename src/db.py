@@ -1,6 +1,5 @@
-from typing import Union
 from sqlalchemy import create_engine, ForeignKey, ForeignKey, Engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, Session
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from flask_login import UserMixin
 
 class Base(DeclarativeBase):
@@ -85,11 +84,11 @@ class Task(Base):
         return f"Task(id={self.id!r}, name={self.name!r}, emoji={self.emoji!r}, current_user_id={self.current_user_id!r}, current_user={self.current_user!s})"
 
 
-def get_engine():
+def get_engine() -> Engine:
     db_path = "sqlite:///db.sqlite"
     engine = create_engine(db_path, echo=False)
     return engine
 
 
-def create_tables(engine):
+def create_tables(engine: Engine):
     Base.metadata.create_all(engine)

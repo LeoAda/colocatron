@@ -125,7 +125,7 @@ def approved_sender_transaction(session: Session, transaction: Transaction):
     session.commit()
 
 
-def get_transaction_by_id(session: Session, transaction_id: int) -> Transaction:
+def get_transaction_by_id(session: Session, transaction_id: int) -> Transaction | None:
     return session.query(Transaction).filter(Transaction.id == transaction_id).first()
 
 
@@ -135,7 +135,7 @@ def remove_transaction(session: Session, transaction_id: int) -> None:
     session.commit()
 
 
-def assign_item_to_next_user(session: Session, item: Item):
+def assign_item_to_next_user(session: Session, item: Item) -> None:
     with session.no_autoflush:
         users = get_users(session)
         # Get current user
@@ -153,7 +153,7 @@ def assign_item_to_next_user(session: Session, item: Item):
     session.commit()
 
 
-def assign_task_to_next_user(session: Session, task: Task):
+def assign_task_to_next_user(session: Session, task: Task) -> None:
     with session.no_autoflush:
         users = get_users(session)
         # Get current user

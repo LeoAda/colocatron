@@ -8,17 +8,12 @@ from flask_login import (
     current_user,
 )
 from sqlalchemy.orm import sessionmaker, scoped_session
-from dotenv import dotenv_values
-import os
+from config import configs
 from function import *
 from hashlib import sha256
 
 import emoji
 
-configs = {
-    **dotenv_values(".env"),
-    **os.environ,
-}
 
 engine = db.get_engine()
 db.create_tables(engine)
@@ -34,6 +29,12 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return get_user_by_id(session, user_id)
+
+
+@login_manager.unauthorized_handler
+def unauthorized_request():
+    flash("Please login or register")
+    return redirect(url_for("home"))
 
 
 @app.route("/login", methods=["GET", "POST"])
