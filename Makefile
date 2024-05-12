@@ -1,6 +1,7 @@
 init_dot_env:
 	echo SECRET_KEY= > .env
 	echo CURRENCY= >> .env
+	echo MODE= >> .env
 
 setup_win: init_dot_env
 	python -m venv .venv
