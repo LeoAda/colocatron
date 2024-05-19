@@ -4,50 +4,38 @@
 
 
 {% block content %}
-<ul id="tasks">
-    Tasks : {% for task in tasks %}
-    <li>
-        {{task.emoji|emojify}} {{ task.name }} - {{task.current_user.name}}
-    </li>
-    {% else %}
-    <li>No tasks</li>
-    {% endfor %}
-</ul>
+{% from 'macros.html' import render_items,render_tasks,render_transaction %}
+<h3>Tasks</h3>
+{{render_tasks(tasks,false,true,false)}}
 
-<ul id="items">
-    Items : {% for item in items %}
-    <li>{{item.emoji|emojify}} {{ item.name }} - {{item.current_user.name}}</li>
-    {% else %}
-    <li>No items</li>
-    {% endfor %}
-</ul>
+<h3>Items</h3>
+{{render_items(items,false,true,false)}}
 
-<ul id="current_transactions">
-    Current transactions :
+<h3>Current transactions</h3>
+<div class="container text-center">
     {% for transaction in transactions if not (transaction.sender_approved and
     transaction.receiver_approved)%}
-    <li>{{":check_mark_button:"|emojify if transaction.sender_approved else
-        ":cross_mark_button:"|emojify }} {{transaction.sender}} {{":right_arrow:"|emojify}}
-        {{":check_mark_button:"|emojify
-        if transaction.receiver_approved else ":cross_mark_button:"|emojify }} {{transaction.receiver}} -
-        {{transaction.amount}}{{CURRENCY}} -
-        {{transaction.reason}}</li>
+    <div class="row ps-2 pb-2">{{render_transaction(transaction,CURRENCY)}}</div>
     {% else %}
-    <li>No transactions</li>
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+        <div class="col-3 border p-2">No current transactions</div>
+    </div>
     {% endfor %}
-</ul>
-<ul id="past_transactions">
-    Past transactions :
+</div>
+
+<h3>Past transactions</h3>
+<div class="container text-center">
     {% for transaction in transactions if (transaction.sender_approved and
     transaction.receiver_approved)%}
-    <li>{{":check_mark_button:"|emojify if transaction.sender_approved else
-        ":cross_mark_button:"|emojify }} {{transaction.sender}} {{":right_arrow:"|emojify}}
-        {{":check_mark_button:"|emojify
-        if transaction.receiver_approved else ":cross_mark_button:"|emojify }} {{transaction.receiver}} -
-        {{transaction.amount}}{{CURRENCY}} -
-        {{transaction.reason}}</li>
+    <div class="row ps-2 pb-2">
+        {{render_transaction(transaction,CURRENCY)}}
+    </div>
     {% else %}
-    <li>No transactions</li>
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+        <div class="col-3 border p-2">No past transactions</div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}

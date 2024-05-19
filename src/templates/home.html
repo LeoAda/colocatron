@@ -1,72 +1,49 @@
-{% extends 'layout.html' %} {% block title %}Home{% endblock%} {% block header
-%}
-<h2 class="subtitle">Home</h2>
-{% endblock %} {% block content %} {% if current_user.is_authenticated %}
-<ul id="tasks">
-  Tasks : {% for task in current_user.tasks %}
-  <li>
-    {{task.emoji|emojify}} {{ task.name }}
-    <form action="{{ url_for('task') }}" method="post">
-      <input type="hidden" name="task_id" value="{{ task.id }}" />
-      <button type="submit">Complete</button>
-    </form>
-  </li>
-  {% else %}
-  <li>{{":check_mark_button:"|emojify}} No tasks</li>
-  {% endfor %}
-</ul>
+{% extends 'layout.html' %} {% block title %}Home{% endblock%}
+{% block header%}<h2 class="subtitle">Home</h2>{% endblock %}
+{% block content %}
+{% if current_user.is_authenticated %}
+{% from 'macros.html' import render_items,render_tasks,render_transaction,render_transaction_approve_action %}
+<h3>Tasks</h3>
+{{render_tasks(current_user.tasks,true,false,false)}}
 
-<ul id="items">
-  Items : {% for item in current_user.items %}
-  <li>{{item.emoji|emojify}} {{ item.name }}</li>
-  <form action="{{ url_for('item') }}" method="post">
-    <input type="hidden" name="item_id" value="{{ item.id }}" />
-    <button type="submit">Complete</button>
-  </form>
-  {% else %}
-  <li>{{":check_mark_button:"|emojify}} No items</li>
-  {% endfor %}
-</ul>
+<h3>Items</h3>
+{{render_items(current_user.items,true,false,false)}}
 
-<ul id="sended_transactions">
-  Transactions to send : {% for transaction in current_user.sended_transactions
+
+<h3>Transactions to send</h3>
+<div class="container text-center">
+  {% for transaction in current_user.sended_transactions
   if not (transaction.sender_approved and transaction.receiver_approved)%}
-  <li>
-    {{":check_mark_button:"|emojify if transaction.sender_approved else
-    ":cross_mark_button:"|emojify }} {{transaction.sender}}
-    {{":right_arrow:"|emojify}} {{":check_mark_button:"|emojify if
-    transaction.receiver_approved else ":cross_mark_button:"|emojify }}
-    {{transaction.receiver}} - {{transaction.amount}}{{CURRENCY}} -
-    {{transaction.reason}}
-  </li>
-  {%if not transaction.sender_approved%}
-  <form action="{{ url_for('transaction') }}" method="post">
-    <input type="hidden" name="transaction_id" value="{{ transaction.id }}" />
-    <button type="submit">Approved</button>
-  </form>
-  {%endif%} {% else %}
-  <li>{{":check_mark_button:"|emojify}} No sended transaction</li>
+  <div class="row ps-2 pb-2">
+    {{render_transaction(transaction,CURRENCY)}}
+    {%if not transaction.sender_approved%}
+    {{render_transaction_approve_action(transaction.id,current_user.id)}}
+    {%endif%}
+  </div>
+  {% else %}
+  <div class="row ps-2 pb-2">
+    <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+    <div class="col-3 border p-2">No sended transaction</div>
+  </div>
   {% endfor %}
-</ul>
-<ul id="received_transactions">
-  Transactions to be received : {% for transaction in
+</div>
+
+<h3>Transactions to be received</h3>
+<div class="container text-center">
+  {% for transaction in
   current_user.received_transactions if not (transaction.sender_approved and
   transaction.receiver_approved)%}
-  <li>
-    {{":check_mark_button:"|emojify if transaction.sender_approved else
-    ":cross_mark_button:"|emojify }} {{transaction.sender}}
-    {{":right_arrow:"|emojify}} {{":check_mark_button:"|emojify if
-    transaction.receiver_approved else ":cross_mark_button:"|emojify }}
-    {{transaction.receiver}} - {{transaction.amount}}{{CURRENCY}} -
-    {{transaction.reason}}
-  </li>
-  {%if not transaction.receiver_approved%}
-  <form action="{{ url_for('transaction') }}" method="post">
-    <input type="hidden" name="transaction_id" value="{{ transaction.id }}" />
-    <button type="submit">Approved</button>
-  </form>
-  {%endif%} {% else %}
-  <li>{{":check_mark_button:"|emojify}} No received transaction</li>
+  <div class="row ps-2 pb-2">
+    {{render_transaction(transaction,CURRENCY)}}
+    {%if not transaction.receiver_approved%}
+    {{render_transaction_approve_action(transaction.id,current_user.id)}}
+    {%endif%}
+  </div>
+  {% else %}
+  <div class="row ps-2 pb-2">
+    <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+    <div class="col-3 border p-2">No received transaction</div>
+  </div>
   {% endfor %}
-</ul>
+</div>
 {%endif%} {% endblock %}

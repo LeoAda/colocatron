@@ -2,6 +2,8 @@ init_dot_env:
 	echo SECRET_KEY= > .env
 	echo CURRENCY= >> .env
 	echo MODE= >> .env
+	echo HOST= >> .env
+	echo PORT= >> .env
 
 setup_win: init_dot_env
 	python -m venv .venv
@@ -12,4 +14,4 @@ setup_linux: init_dot_env
 	.venv/bin/pip install -r requirements.txt
 
 run_win:
-	set PYTHONPATH=src;%PYTHONPATH% && waitress-serve --listen=0.0.0.0:8080 src.app:app
+	./.venv/Scripts/python.exe ./src/app.py
