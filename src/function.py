@@ -135,8 +135,9 @@ def remove_transaction(session: Session, transaction_id: int) -> None:
     session.commit()
 
 
-def assign_item_to_next_user(session: Session, item: Item) -> None:
+def assign_item_to_next_user(session: Session, item_id: int) -> None:
     with session.no_autoflush:
+        item = get_item_by_id(session=session, item_id=item_id)
         users = get_users(session)
         # Get current user
         current_user = item.current_user
@@ -153,8 +154,9 @@ def assign_item_to_next_user(session: Session, item: Item) -> None:
     session.commit()
 
 
-def assign_task_to_next_user(session: Session, task: Task) -> None:
+def assign_task_to_next_user(session: Session, task_id: int) -> None:
     with session.no_autoflush:
+        task = get_task_by_id(session=session, task_id=task_id)
         users = get_users(session)
         # Get current user
         current_user = task.current_user

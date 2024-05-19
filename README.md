@@ -16,6 +16,9 @@ waitress-serve --listen=0.0.0.0:8080 api:app
 ipconfig (windows)
 
 # Todo
+* Change /transaction/ from current_user.id to for user.id
+* Macros
+* Change /transaction/ /item/ /task/ to ./complete and change url in forms
 * Doc
 * Blueprint ?
 * Ui
