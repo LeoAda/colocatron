@@ -80,7 +80,7 @@
         <div class="row mb-3">
             <label for="receiver_id" class="col-sm-2 col-form-label">Receiver</label>
             <div class="col-sm-10">
-                <select name="receiver_id" id="receiver_id" class="form-select" disabled>
+                <select name="receiver_id" id="receiver_id" class="form-select">
                     <option value="{{ current_user.id }}" selected>{{current_user.name}}</option>
                 </select>
             </div>
@@ -107,7 +107,7 @@
         <div class="row mb-3">
             <label for="sender_id" class="col-sm-2 col-form-label">Sender</label>
             <div class="col-sm-10">
-                <select name="sender_id" id="sender_id" class="form-select" disabled>
+                <select name="sender_id" id="sender_id" class="form-select">
                     <option value="{{ current_user.id }}" selected>{{current_user.name}}</option>
                 </select>
             </div>

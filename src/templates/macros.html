@@ -1,83 +1,117 @@
 {% macro render_items(items, display_complete_action, display_user, display_delete) %}
-<ul class="list-group">
+<div class="container text-center">
     {% for item in items %}
-    <li class="list-group-item d-flex">
-        <div>{{item.emoji|emojify}} - {{ item.name }}
-            {% if display_user %}
-            - {{item.current_user.name}}
-            {% endif %}
-        </div>
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{item.emoji|emojify}}</div>
+        <div class="col-3 border p-2">{{ item.name }}</div>
+        {% if display_user %}
+        <div class="col-2 border p-2">{{item.current_user.name}}</div>
+        {% endif %}
         {% if display_complete_action %}
-        <form action="{{ url_for('item') }}" method="post">
-            <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
-            <button type="submit" class="btn btn-primary">Complete</button>
-        </form>
+        <div class="col-auto border p-2">
+            <form action="{{ url_for('item') }}" method="post">
+                <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
+                <button type="submit" class="btn btn-primary">Complete</button>
+            </form>
+        </div>
         {% endif %}
         {% if display_delete %}
-        <form action="{{ url_for('request_delete_item') }}" method="post">
-            <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        {% endif %}
-    </li>
-    {% else %}
-    <li class="list-group-item">
-        {{":check_mark_button:"|emojify}} No items
-    </li>
-    {% endfor %}
-</ul>
-{% endmacro %}
-
-{% macro render_tasks(tasks, display_complete_action, display_user, display_delete) %}
-<ul class="list-group">
-    {% for task in tasks %}
-    <li class="list-group-item d-flex">
-        <div>{{task.emoji|emojify}} - {{ task.name }}{% if display_user %}
-            - {{task.current_user.name}}
-            {% endif %}
+        <div class="col-auto border p-2">
+            <form action="{{ url_for('request_delete_item') }}" method="post">
+                <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
         </div>
-        {% if display_complete_action %}
-        <form action="{{ url_for('task') }}" method="post">
-            <input type="hidden" id="task_id" name="task_id" value="{{ task.id }}" />
-            <button type="submit" class="btn btn-primary">Complete</button>
-        </form>
         {% endif %}
-        {% if display_delete %}
-        <form action="{{ url_for('request_delete_task') }}" method="post">
-            <input type="hidden" id="task_id" name="task_id" value="{{ task.id }}" />
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        {% endif %}
-    </li>
+    </div>
     {% else %}
-    <li class="list-group-item">
-        {{":check_mark_button:"|emojify}} No tasks
-    </li>
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+        <div class="col-3 border p-2">No item</div>
+    </div>
     {% endfor %}
-</ul>
-{% endmacro %}
-
-{% macro render_transaction(transaction,currency) %}
-<div>{{":check_mark_button:"|emojify if transaction.sender_approved else
-    ":cross_mark_button:"|emojify }} {{transaction.sender}}
-    {{":right_arrow:"|emojify}} {{":check_mark_button:"|emojify if
-    transaction.receiver_approved else ":cross_mark_button:"|emojify }}
-    {{transaction.receiver}} - {{transaction.amount}}{{currency}} -
-    {{transaction.reason}}
 </div>
 {% endmacro %}
 
-{% macro render_transaction_approve_action(transaction_id,user_id) %}
-<form action="{{ url_for('transaction') }}" method="post">
-    <input type="hidden" id="transaction_id" name="transaction_id" value="{{ transaction_id }}" />
-    <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}" />
-    <button type="submit" class="btn btn-primary">Approve</button>
-</form>
+{% macro render_tasks(tasks, display_complete_action, display_user, display_delete) %}
+<div class="container text-center">
+    {% for task in tasks %}
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{task.emoji|emojify}}</div>
+        <div class="col-3 border p-2">{{ task.name }}</div>
+        {% if display_user %}
+        <div class="col-2 border p-2">{{task.current_user.name}}</div>
+        {% endif %}
+        {% if display_complete_action %}
+        <div class="col-auto border p-2">
+            <form action="{{ url_for('task') }}" method="post">
+                <input type="hidden" id="task_id" name="task_id" value="{{ task.id }}" />
+                <button type="submit" class="btn btn-primary">Complete</button>
+            </form>
+        </div>
+        {% endif %}
+        {% if display_delete %}
+        <div class="col-auto border p-2">
+            <form action="{{ url_for('request_delete_task') }}" method="post">
+                <input type="hidden" id="task_id" name="task_id" value="{{ task.id }}" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+        <div class="col-3 border p-2">No task</div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro render_transaction(transaction,currency) %}
+<div class="col-auto border rounded-start-4 py-2">
+    {{":check_mark_button:"|emojify if transaction.sender_approved else
+    ":cross_mark_button:"|emojify }} {{transaction.sender}}
+</div>
+<div class="col-auto border py-2">{{":right_arrow:"|emojify}}
+</div>
+<div class="col-auto border py-2">
+    {{":check_mark_button:"|emojify if
+    transaction.receiver_approved else ":cross_mark_button:"|emojify }}{{transaction.receiver}}
+</div>
+<div class="col-auto border py-2"> {{transaction.amount}}{{currency}}
+</div>
+<div class="col-auto border py-2">
+    {{transaction.reason}}
+</div>
+
+{% endmacro %}
+
+{% macro render_transaction_approve_action(transaction_id,user_id,name) %}
+{%if name %}
+<div class="col-auto border p-2">
+    <form action="{{ url_for('transaction') }}" method="post">
+        <input type="hidden" id="transaction_id" name="transaction_id" value="{{ transaction_id }}" />
+        <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}" />
+        <button type="submit" class="btn btn-primary">Approve {{name}}</button>
+    </form>
+</div>
+{%else%}
+<div class="col-auto border p-2">
+    <form action="{{ url_for('transaction') }}" method="post">
+        <input type="hidden" id="transaction_id" name="transaction_id" value="{{ transaction_id }}" />
+        <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}" />
+        <button type="submit" class="btn btn-primary">Approve</button>
+    </form>
+</div>
+{%endif%}
 {% endmacro %}
 
 {% macro render_transaction_delete_action(transaction_id) %}
-<form action="{{ url_for('request_delete_transaction') }}" method="post">
-    <input type="hidden" name="transaction_id" id="transaction_id" value="{{ transaction_id }}" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-</form>
+<div class="col-auto border p-2">
+    <form action="{{ url_for('request_delete_transaction') }}" method="post">
+        <input type="hidden" name="transaction_id" id="transaction_id" value="{{ transaction_id }}" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
 {% endmacro %}

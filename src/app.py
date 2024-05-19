@@ -1,5 +1,6 @@
 import db
 from flask import Flask, render_template, request, url_for, redirect, flash
+from waitress import serve
 from flask_login import (
     LoginManager,
     login_required,
@@ -54,7 +55,10 @@ def login():
             flash("Wrong username")
             return render_template("login.html")
     elif request.method == "GET":
-        return render_template("login.html")
+        if current_user.is_authenticated:
+            return redirect(url_for("home"))
+        else:
+            return render_template("login.html")
 
 
 @app.route("/logout", methods=["GET"])
@@ -72,7 +76,10 @@ def register():
         user = add_user(session, name=name, username=username, password=password)
         return redirect(url_for("login"))
     if request.method == "GET":
-        return render_template("register.html")
+        if current_user.is_authenticated:
+            return redirect(url_for("home"))
+        else:
+            return render_template("register.html")
 
 
 @app.route("/", methods=["GET"])
@@ -254,5 +261,10 @@ def inject_configs():
 
 
 if __name__ == "__main__":
-    debug: bool = configs["MODE"] == "debug"
-    app.run(host="0.0.0.0", port=8080, debug=debug)
+    is_debug: bool = configs["MODE"] == "debug"
+    host: str = configs["HOST"] if configs["HOST"] else "127.0.0.1"
+    port: int = int(configs["PORT"]) if configs["PORT"] else 8080
+    if is_debug:
+        app.run(host=host, port=port, debug=True)
+    else:
+        serve(app, host=host, port=port)

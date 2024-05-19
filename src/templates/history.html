@@ -12,25 +12,30 @@
 {{render_items(items,false,true,false)}}
 
 <h3>Current transactions</h3>
-<ul class="list-group">
+<div class="container text-center">
     {% for transaction in transactions if not (transaction.sender_approved and
     transaction.receiver_approved)%}
-    <li class="list-group-item d-flex">
-        {{render_transaction(transaction,CURRENCY)}}
-    </li>
+    <div class="row ps-2 pb-2">{{render_transaction(transaction,CURRENCY)}}</div>
     {% else %}
-    <li class="list-group-item d-flex">No current transactions</li>
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+        <div class="col-3 border p-2">No current transactions</div>
+    </div>
     {% endfor %}
-</ul>
+</div>
+
 <h3>Past transactions</h3>
-<ul class="list-group">
+<div class="container text-center">
     {% for transaction in transactions if (transaction.sender_approved and
     transaction.receiver_approved)%}
-    <li class="list-group-item d-flex">
+    <div class="row ps-2 pb-2">
         {{render_transaction(transaction,CURRENCY)}}
-    </li>
+    </div>
     {% else %}
-    <li class="list-group-item d-flex">No past transactions</li>
+    <div class="row ps-2 pb-2">
+        <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+        <div class="col-3 border p-2">No past transactions</div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}

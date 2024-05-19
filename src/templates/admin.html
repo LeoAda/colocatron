@@ -15,24 +15,26 @@ render_items,render_tasks,render_transaction,render_transaction_approve_action,r
 
 <h3>Transactions</h3>
 <h4>Manage transactions</h4>
-<ul class="list-group">
+<div class="container text-center">
   {% for transaction in transactions%}
-  <li class="list-group-item d-flex">
+  <div class="row ps-2 pb-2">
     {{render_transaction(transaction,CURRENCY)}}
+    {{render_transaction_delete_action(transaction.id)}}
     {% if not transaction.sender_approved%}
-    <div>Approve sender :</div>
-    {{render_transaction_approve_action(transaction.id,transaction.sender.id)}}
+    {{render_transaction_approve_action(transaction.id,transaction.sender.id,transaction.sender.name)}}
     {%endif%}
     {% if not transaction.receiver_approved%}
-    <div>Approve receiver :</div>
-    {{render_transaction_approve_action(transaction.id,transaction.receiver.id)}}
+    {{render_transaction_approve_action(transaction.id,transaction.receiver.id,transaction.receiver.name)}}
     {%endif%}
-    {{render_transaction_delete_action(transaction.id)}}
-  </li>
+
+  </div>
   {% else %}
-  <li>No transactions</li>
+  <div class="row ps-2 pb-2">
+    <div class="col-auto border rounded-start-4 p-2">{{":check_mark_button:"|emojify}}</div>
+    <div class="col-3 border p-2">No received transaction</div>
+  </div>
   {% endfor %}
-</ul>
+</div>
 <h4>Add transaction</h4>
 <div id="Transaction" class="container mb-5">
   <form action="{{ url_for('request_add_transaction') }}" method="post">
